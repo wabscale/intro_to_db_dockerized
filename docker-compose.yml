@@ -17,22 +17,16 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - MYSQL_USER=jc
-      - MYSQL_PASSWORD=password
-      - MYSQL_ROOT_PASSWORD=password
       - PMA_ARBITRARY=1
-      # - PMA_HOST=db
-      # - PMA_USER=jc
-      # - PMA_PASSWORD=password
     links:
-      - "mysql:db"
+      - "mysql:server"
     ports:
       - "5000:80"
   mysql:
     image: mysql:latest
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      - MYSQL_USER=jc
+      - MYSQL_USER=username
       - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=intro
       - MYSQL_ROOT_PASSWORD=password
