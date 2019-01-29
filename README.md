@@ -38,7 +38,7 @@ Once you launch the containers (`make up`), then you can proceed to http://local
 
 ```
 server: server
-username: username
+username: root
 password: password
 ```
 
