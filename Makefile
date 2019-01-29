@@ -7,9 +7,11 @@ up:
 
 down:
 	docker-compose down
+	make rm
 
 kill:
 	docker-compose kill
+	make rm
 
 rm:
 	docker-compose rm -f
