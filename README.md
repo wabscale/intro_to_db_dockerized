@@ -1,4 +1,4 @@
-# Intro to Databases 
+# Containerizing the garbage
 
 Come one come all and listen to me sales pitch! In introducory database cources all across the land, teachers have their poor students install mountains of garbage to acomplish simple sql querys. To make matters worse, instead of using a sensable or light weight database backed like sqlite3, they forced these unsuspecting students into using mysql! The terror they felt when they found out how unnecessarily bulky of a backend mysql truely is!
 
