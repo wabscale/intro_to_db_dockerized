@@ -8,11 +8,11 @@ up:
 
 down: dump
 	docker-compose down
-	make rm cleandb
+	make rm
 
 kill: dump
 	docker-compose kill
-	make rm cleandb
+	make rm
 
 rm:
 	docker-compose rm -f
@@ -21,20 +21,16 @@ clean: kill
 	docker system prune -f
 	docker rmi mysql phpmyadmin/phpmyadmin
 
-cleandb:
-	if [ -d mysql_data ]; then \
-		echo "deleting the garbage..."; \
-		rm -rf mysql_data; \
-		echo "good riddence to that crap"; \
+dump:
+	if make is_running; then \
+		make backup; \
+		docker exec `docker ps --filter publish=3306 -q` \
+		mysqldump --user=root --password=password -A > dump.sql; \
+		make pack; \
 	fi
 
-dump:
-	make backup
-	docker exec `docker ps --filter publish=3306 -q` \
-	mysqldump --user=root --password=password -A > dump.sql
-	make pack
-
 load:
+	make is_running
 	@echo "loading database backup to container..."
 	@echo "PLZ no exit!! This may take a minute..."
 	@if [ -f dump.sql.tar.gz ]; then \
@@ -50,10 +46,15 @@ load:
 
 backup:
 	if [ -f dump.sql.tar.gz ]; then \
-		mv dump{,backup}.sql.tar.gz; \
+		cp dump{,backup}.sql.tar.gz; \
 	fi
 	if [ -f dump.sql ]; then \
-		mv dump{,backup}.sql; \
+		cp dump{,backup}.sql; \
+	fi
+
+is_running:
+	@if [ -z "`docker ps --filter publish=3306 -q`" ]; then \
+		exit 1; \
 	fi
 
 pack:
