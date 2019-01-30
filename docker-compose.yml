@@ -17,7 +17,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - PMA_ARBITRARY=1
+      - PMA_HOST=server
     links:
       - "mysql:server"
     ports:
@@ -28,10 +28,7 @@ services:
     environment:
       - MYSQL_USER=username
       - MYSQL_PASSWORD=password
-      - MYSQL_DATABASE=intro
       - MYSQL_ROOT_PASSWORD=password
     ports:
       - "3306:3306"
-    volumes:
-      - ./mysql_data:/var/lib/mysql:rw
     
