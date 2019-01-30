@@ -4,14 +4,15 @@ all: up
 
 up:
 	docker-compose up -d --force-recreate
+	make load
 
-down:
+down: dump
 	docker-compose down
-	make rm
+	make rm cleandb
 
-kill:
+kill: dump
 	docker-compose kill
-	make rm
+	make rm cleandb
 
 rm:
 	docker-compose rm -f
@@ -27,16 +28,42 @@ cleandb:
 		echo "good riddence to that crap"; \
 	fi
 
-compress:
-	if [ -d mysql_data ]; then \
-		echo "compressing the garbage"; \
-		tar -cvf mysql_data.tgz mysql_data; \
-		rm -rf mysql_data; \
+dump:
+	make backup
+	docker exec `docker ps --filter publish=3306 -q` \
+	mysqldump --user=root --password=password -A > dump.sql
+	make pack
+
+load:
+	@echo "loading database backup to container..."
+	@echo "PLZ no exit!! This may take a minute..."
+	@if [ -f dump.sql.tar.gz ]; then \
+		make unpack; \
+		for i in `seq 30`; do \
+			sleep 1; \
+		  docker exec -i `docker ps --filter publish=3306 -q` \
+		  mysql --password=password < dump.sql 2> /dev/null && break; \
+		done; \
+		echo "Success!"; \
+	fi;
+	make pack
+
+backup:
+	if [ -f dump.sql.tar.gz ]; then \
+		mv dump{,backup}.sql.tar.gz; \
+	fi
+	if [ -f dump.sql ]; then \
+		mv dump{,backup}.sql; \
 	fi
 
-uncompress:
-	if [ -f mysql_data.tgz ]; then \
-		echo "uncompressing the garbage"; \
-		tar -xvf mysql_data.tgz; \
-		rm mysql_data.tgz; \
+pack:
+	if [ -f dump.sql ]; then \
+		tar -cvf dump.sql{.tar.gz,}; \
+		rm dump.sql; \
+	fi
+
+unpack:
+	if [ -f dump.sql.tar.gz ]; then \
+		tar -xvf dump.sql.tar.gz; \
+		rm dump.sql.tar.gz; \
 	fi

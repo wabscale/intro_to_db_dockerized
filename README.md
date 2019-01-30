@@ -6,7 +6,9 @@ Fear no more oh lowly students, as I have containerized the garbage so you can u
 
 
 ## Overview
-The mysql container will create a folder in this directory called mysql_data. This directory holds all the files that mysql uses. Plz no touchie these files. 
+You must use the make targets that I have written, or you will lose all your data. When the container starts, it tries to read a database dump called `dump.sql.tar.gz`. When you stop the containers, the make target will dump all the databases in a file then compress it into `dump.sql.tar.gz`. If that file already exists, it will back it up to `dumpbackup.sql.tar.gz**. 
+
+It is **SUPER** inportaint to not interupt the up, kill, or down make targets. Plz advise that ignoring this may result in **LOSS IN ALL DATA**!.
 
 ### Prerequisites
 Install `docker` and `docker-compose`. If you are going into CS, you should learn how to use both of these, as they are imensly powerful tools. In the event of an emergency plz remain calm and direct any and all questions to the nearest search engine.
