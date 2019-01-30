@@ -39,7 +39,6 @@ make clean
 Once you launch the containers (`make up`), then you can proceed to http://localhost:5000 where you will be presented with a login page. The default creds are as follows (I'm aware that they are imaginative):
 
 ```
-server: server
 username: root
 password: password
 ```
