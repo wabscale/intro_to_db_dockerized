@@ -4,7 +4,7 @@ all: up
 
 up:
 	docker-compose up -d --force-recreate
-	make load
+	@make load
 
 down: dump
 	docker-compose down
@@ -22,7 +22,8 @@ clean: kill
 	docker rmi mysql phpmyadmin/phpmyadmin
 
 dump:
-	if make is_running; then \
+	@echo "dumping persistent data..."
+	@if make is_running; then \
 		make backup; \
 		docker exec `docker ps --filter publish=3306 -q` \
 		mysqldump --user=root --password=password -A > dump.sql; \
@@ -30,7 +31,7 @@ dump:
 	fi
 
 load:
-	make is_running
+	@make is_running
 	@echo "loading database backup to container..."
 	@echo "PLZ no exit!! This may take a minute..."
 	@if [ -f dump.sql.tar.gz ]; then \
@@ -42,13 +43,13 @@ load:
 		done; \
 		echo "Success!"; \
 	fi;
-	make pack
+	@make pack
 
 backup:
-	if [ -f dump.sql.tar.gz ]; then \
+	@if [ -f dump.sql.tar.gz ]; then \
 		cp dump{,backup}.sql.tar.gz; \
 	fi
-	if [ -f dump.sql ]; then \
+	@if [ -f dump.sql ]; then \
 		cp dump{,backup}.sql; \
 	fi
 
@@ -58,13 +59,13 @@ is_running:
 	fi
 
 pack:
-	if [ -f dump.sql ]; then \
+	@if [ -f dump.sql ]; then \
 		tar -cvf dump.sql{.tar.gz,}; \
 		rm dump.sql; \
 	fi
 
 unpack:
-	if [ -f dump.sql.tar.gz ]; then \
+	@if [ -f dump.sql.tar.gz ]; then \
 		tar -xvf dump.sql.tar.gz; \
 		rm dump.sql.tar.gz; \
 	fi
