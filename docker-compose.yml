@@ -23,7 +23,7 @@ services:
     ports:
       - "5000:80"
   mysql:
-    image: mysql:latest
+    image: mariadb:latest
     command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_USER=username
