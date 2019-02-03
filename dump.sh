@@ -38,8 +38,11 @@ dump() {
             USER_DATABASES=$db ${USER_DATABASES}
         fi
     done
-    docker exec -it ${CONTAINER_ID} mysqldump --password=password --databases ${USER_DATABASES} > dump.sql
-    make pack
+    if [[ -n ${USER_DATABASES} ]]; then
+        make backup
+        docker exec -it ${CONTAINER_ID} mysqldump --password=password --databases ${USER_DATABASES} > dump.sql
+        make pack
+    fi
 }
 
 dump
