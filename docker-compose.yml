@@ -15,7 +15,7 @@ version: '3'
 
 services:
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:4.7
     environment:
       - PMA_HOST=server
     links:
@@ -23,7 +23,7 @@ services:
     ports:
       - "5000:80"
   mysql:
-    image: mariadb:latest
+    image: mariadb:10.4
     command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_USER=username
